@@ -1,8 +1,10 @@
 require('dotenv').config({ path: './config.env' });
 import express from 'express';
 import morgan from 'morgan';
+import handleError from './controller/HandleError';
 
 import { userRouter } from './routes';
+import AppError from './util/AppError';
 
 const app = express();
 
@@ -24,5 +26,10 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/v1/users', userRouter);
+app.use('*', (req, res, next) => {
+    return next(new AppError('404', 404));
+});
+
+app.use(handleError());
 
 export default app;

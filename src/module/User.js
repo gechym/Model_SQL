@@ -11,6 +11,9 @@ const User = sequelize.define('tb_user', {
     name: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
+        validate: {
+            let: [4, 6],
+        },
     },
     rule: {
         type: Sequelize.DataTypes.STRING,
