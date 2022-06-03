@@ -34,11 +34,10 @@ export const signUp = catchAsync(async (req, res, next) => {
         return next(new AppError('Mật khẩu quá kếu vui lòng nhập trên 8 ký tự', 404));
     }
 
-    const passwordHash = await bcryptjs.hash(password, 12);
     const user = await User.create({
         name,
         email,
-        password: passwordHash,
+        password,
     });
 
     const token = createToken(user);
@@ -70,6 +69,7 @@ export const login = catchAsync(async (req, res, next) => {
     res.status(200).json({
         message: 'success',
         token: token,
+
         data: {
             user: user,
         },
@@ -200,12 +200,11 @@ export const resetPassword = catchAsync(async (req, res, next) => {
         return next(new AppError('mật khẩu xác thực khác nhau'));
     }
 
-    const passwordHash = await bcryptjs.hash(password, 12);
     const passwordChangeAt = Date.now() + 10000;
 
     await User.update(
         {
-            password: passwordHash,
+            password: password,
             passwordChangeAt: passwordChangeAt,
             passwordResetToken: null,
             passwordResetExpires: null,

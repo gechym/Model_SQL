@@ -1,5 +1,6 @@
 import { sequelize } from '../util/serviceDatabase';
 const Sequelize = require('sequelize');
+import bcryptjs from 'bcryptjs';
 
 const User = sequelize.define('tb_users', {
     id: {
@@ -35,6 +36,11 @@ const User = sequelize.define('tb_users', {
         validate: {
             len: [8, 100000000],
         },
+        async set(value) {
+            // const rawValue = this.getDataValue('password')
+            const hash = await bcryptjs.hashSync(value, 12);
+            this.setDataValue('password', hash);
+        },
     },
     passwordChangeAt: {
         type: Sequelize.DataTypes.DATE,
@@ -54,6 +60,12 @@ const User = sequelize.define('tb_users', {
     active: {
         type: Sequelize.DataTypes.BOOLEAN,
         defaultValue: true,
+    },
+    nickname: {
+        type: Sequelize.DataTypes.VIRTUAL(Sequelize.STRING, ['name']),
+        get() {
+            return this.name + '20IT432';
+        },
     },
 });
 
