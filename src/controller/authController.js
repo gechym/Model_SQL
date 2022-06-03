@@ -78,6 +78,15 @@ export const login = catchAsync(async (req, res, next) => {
     });
 });
 
+export const checkRules =
+    (...rules) =>
+    (req, res, next) => {
+        if (!rules.includes(req.user.rule))
+            return next(new AppError('Bạn ko có quyền truy cập URL này'));
+
+        next();
+    };
+
 export const protect = catchAsync(async (req, res, next) => {
     // lấy token
     const { authorization } = req.headers;
