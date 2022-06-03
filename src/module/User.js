@@ -45,7 +45,7 @@ const User = sequelize.define('tb_users', {
         default: null,
     },
     passwordResetExpires: {
-        type: Sequelize.DataTypes.STRING,
+        type: Sequelize.DataTypes.DATE,
         default: null,
     },
     photo: {
