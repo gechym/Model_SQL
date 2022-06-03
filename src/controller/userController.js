@@ -6,6 +6,7 @@ export const getUsers = catchAsync(async (req, res) => {
     res.status(200).json({
         message: 'success',
         requestTime: req.requestTime,
+        user: req.user,
         data: {
             user: user,
         },

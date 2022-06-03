@@ -1,5 +1,6 @@
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { promisify } from 'util';
 
 import User from '../module/User';
 import AppError from '../util/AppError';
@@ -75,4 +76,53 @@ export const login = catchAsync(async (req, res, next) => {
             user: user,
         },
     });
+});
+
+export const protect = catchAsync(async (req, res, next) => {
+    // lấy token
+    const { authorization } = req.headers;
+    let token;
+
+    //https://anonystick.com/blog-developer/bearer-token-la-gi-neu-khong-co-bearer-truoc-token-2021052140045637#:~:text=Theo%20c%C3%A1c%20t%C3%A0i%20li%E1%BB%87u%20th%C3%AC,lu%C3%B4n%20mang%20theo%20token%20n%C3%A0y.
+    if (authorization && authorization.startsWith('Bearer')) {
+        token = authorization.split(' ')[1];
+    }
+
+    if (!token) return next(new AppError('Bạn chưa đăng nhập', 404));
+
+    // verify token
+    let decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
+    decode = {
+        ...decode,
+        decode_iat: new Date(decode.iat * 1000).toLocaleString(),
+        decode_exp: new Date(decode.exp * 1000).toLocaleString(),
+    };
+    console.log(decode);
+
+    // check user
+    const currentUser = await User.findOne({
+        where: {
+            id: decode.id,
+            name: decode.name,
+        },
+    });
+    if (!currentUser) {
+        return next(
+            new AppError('Lỗi xác thực danh tính ,Vui lòng đăng nhập lại', 404),
+        );
+    }
+
+    // // check đổi pass khi token còn hạn => bắt user login lại
+    console.log(decode.iat * 1000, currentUser.passwordChangeAt.getTime());
+
+    if (decode.iat * 1000 < currentUser.passwordChangeAt.getTime())
+        return next(
+            new AppError(
+                `Bạn đã đổi password ngày ${currentUser.passwordChangeAt.toLocaleString()} , vui lòng đăng nhập lại`,
+                404,
+            ),
+        );
+
+    req.user = currentUser;
+    next();
 });
