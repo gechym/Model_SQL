@@ -3,22 +3,12 @@ const handleError = () => (err, req, res, next) => {
         `
 /// ┌──────────────────────────────────────────────────────
 /// │             APP ERROR LOG                            
-/// │                                                      
 /// │      ${err.stack}                                        
-/// │                                                      
-/// │                                                      
-/// │                                                     
-/// │      {                                  
-/// │        message : ${err.message}                                              
-/// │                                                      
-/// │       }                                               
-/// │                                                      
-/// │                                                      
 /// └──────────────────────────────────────────────────────
     `,
     );
-    const statusCode = err.statusCode || 500;
 
+    const statusCode = err.statusCode || 500;
     return res.status(statusCode).json({
         message: err.message,
     });

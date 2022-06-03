@@ -9,6 +9,7 @@ export const sequelize = new Sequelize('natour', 'root', '', {
         freezeTableName: true,
     },
     sync: { forcus: true },
+    query: { raw: true },
 });
 
 const connectDatabase = async () => {

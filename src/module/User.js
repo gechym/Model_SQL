@@ -1,7 +1,7 @@
 import { sequelize } from '../util/serviceDatabase';
 const Sequelize = require('sequelize');
 
-const User = sequelize.define('tb_user', {
+const User = sequelize.define('tb_users', {
     id: {
         type: Sequelize.DataTypes.INTEGER,
         autoIncrement: true,
@@ -11,9 +11,6 @@ const User = sequelize.define('tb_user', {
     name: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
-        validate: {
-            let: [4, 6],
-        },
     },
     rule: {
         type: Sequelize.DataTypes.STRING,
@@ -23,11 +20,33 @@ const User = sequelize.define('tb_user', {
     email: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        validate: {
+            isEmail: {
+                msg: 'Email không phù h',
+            },
+        },
+        unique: {
+            msg: 'Đã có người đăng ký bằng email này, vui lòng thử email khác ',
+        },
     },
     password: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
+        validate: {
+            len: [8, 100000000],
+        },
+    },
+    passwordChangeAt: {
+        type: Sequelize.DataTypes.DATE,
+        default: null,
+    },
+    passwordResetToken: {
+        type: Sequelize.DataTypes.STRING,
+        default: null,
+    },
+    passwordResetExpires: {
+        type: Sequelize.DataTypes.STRING,
+        default: null,
     },
     photo: {
         type: Sequelize.DataTypes.STRING,
@@ -39,19 +58,3 @@ const User = sequelize.define('tb_user', {
 });
 
 export default User;
-
-// CREATE TABLE `user` (
-// 	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-// 	`name` VARCHAR(255) NOT NULL DEFAULT '0' COLLATE 'utf8mb4_general_ci',
-// 	`rule` VARCHAR(255) NOT NULL DEFAULT '"user"' COLLATE 'utf8mb4_general_ci',
-// 	`email` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
-// 	`password` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
-// 	`photo` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-// 	`active` TINYINT(1) NULL DEFAULT '1',
-// 	PRIMARY KEY (`id`) USING BTREE,
-// 	UNIQUE INDEX `email` (`email`) USING BTREE,
-//  CHECK (`active > -1`)
-// )
-// COLLATE='utf8mb4_general_ci'
-// ENGINE=InnoDB
-// ;
