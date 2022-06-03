@@ -25,10 +25,18 @@ const User = sequelize.define('tb_users', {
             isEmail: {
                 msg: 'Email không phù h',
             },
+
+            async isUnique(value) {
+                const user = await User.findOne({ where: { email: value } });
+
+                if (user) {
+                    throw new Error('Đã có người đăng ký bằng email này, vui lòng thử email khác oke');
+                }
+            },
         },
-        unique: {
-            msg: 'Đã có người đăng ký bằng email này, vui lòng thử email khác ',
-        },
+        // unique: {
+        //     msg: 'Đã có người đăng ký bằng email này, vui lòng thử email khác ',
+        // },
     },
     password: {
         type: Sequelize.DataTypes.STRING,
