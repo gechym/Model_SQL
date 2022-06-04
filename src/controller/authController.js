@@ -69,17 +69,14 @@ export const login = catchAsync(async (req, res, next) => {
     res.status(200).json({
         message: 'success',
         token: token,
-
-        data: {
-            user: user,
-        },
     });
 });
 
 export const checkRules =
     (...rules) =>
     (req, res, next) => {
-        if (!rules.includes(req.user.rule)) return next(new AppError('Bạn ko có quyền truy cập URL này'));
+        if (!rules.includes(req.user.rule))
+            return next(new AppError('Bạn ko có quyền truy cập URL này', 404));
 
         next();
     };
@@ -194,10 +191,10 @@ export const resetPassword = catchAsync(async (req, res, next) => {
         },
     });
 
-    if (!user) return next(new AppError('Token hết hạn hoặc không hợp lệ vui lòng thử lại'));
+    if (!user) return next(new AppError('Token hết hạn hoặc không hợp lệ vui lòng thử lại', 404));
 
     if (password !== passwordConfig) {
-        return next(new AppError('mật khẩu xác thực khác nhau'));
+        return next(new AppError('mật khẩu xác thực khác nhau', 404));
     }
 
     const passwordChangeAt = Date.now() + 10000;

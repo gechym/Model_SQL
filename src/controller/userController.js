@@ -16,6 +16,7 @@ export const getUsers = catchAsync(async (req, res, next) => {
         },
     });
 });
+
 export const test = catchAsync(async (req, res, next) => {
     res.status(200).json({
         message: 'Success',
