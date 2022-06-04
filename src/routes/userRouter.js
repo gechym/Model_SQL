@@ -7,6 +7,7 @@ import {
     checkRules,
     forgotPassword,
     resetPassword,
+    test,
 } from '../controller';
 
 const userRouter = express.Router();
@@ -17,5 +18,6 @@ userRouter.route('/forgotPassword').patch(forgotPassword);
 userRouter.route('/resetPassword/:resetToken').patch(resetPassword);
 
 userRouter.route('/').get(protect, checkRules('admin'), getUsers);
+userRouter.route('/test').get(test);
 
 export default userRouter;

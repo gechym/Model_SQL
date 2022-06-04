@@ -1,8 +1,9 @@
 import app from './app';
-import connectDatabase from './util/serviceDatabase';
+import connectDatabase from './Database/connectDB';
 
 connectDatabase();
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`Running on PORT 👉 http://localhost/${PORT} 🙉`);
+    console.log(`\n\n\nRunning on PORT 👉 http://localhost/${PORT} 🙉\n\n\n`);
 });
