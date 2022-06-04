@@ -1,8 +1,10 @@
-import User from '../module/User';
-import Country from '../module/Country';
 import Capital from '../module/Capital';
+import Country from '../module/Country';
+import HoaDonBanHang from '../module/HoaDonBanHang';
+import Post from '../module/post';
+import Product from '../module/product';
+import User from '../module/User';
 import catchAsync from '../util/catchAsync';
-import { sequelize } from '../Database/serviceDatabase';
 
 export const getUsers = catchAsync(async (req, res, next) => {
     const user = await User.findAll({
@@ -20,8 +22,22 @@ export const getUsers = catchAsync(async (req, res, next) => {
     });
 });
 export const test = catchAsync(async (req, res, next) => {
+    // const country = await Country.findOne({ where: { countryName: 'Việt Nam' } });
+    // const capital = await Capital.findOne({ where: { cappitalName: 'Viên Chăm' } });
+
+    // // await country.setCapital(capital);
+    // await capital.setCountry(country);
+
+    const product = await Product.findAll();
+
+    const listUser = await User.findAll({
+        include: [Product, Post],
+    });
+
     res.status(200).json({
         message: 'Success',
+        product,
+        listUser,
     });
 });
 
