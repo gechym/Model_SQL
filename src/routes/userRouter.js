@@ -1,14 +1,5 @@
 import express from 'express';
-import {
-    getUsers,
-    login,
-    signUp,
-    protect,
-    checkRules,
-    forgotPassword,
-    resetPassword,
-    test,
-} from '../controller';
+import { getUsers, login, signUp, protect, checkRules, forgotPassword, resetPassword } from '../controller';
 
 const userRouter = express.Router();
 
@@ -18,6 +9,5 @@ userRouter.route('/forgot-password').patch(forgotPassword);
 userRouter.route('/reset-password/:resetToken').patch(resetPassword);
 
 userRouter.route('/').get(protect, checkRules('admin'), getUsers);
-userRouter.route('/test').get(test);
 
 export default userRouter;
