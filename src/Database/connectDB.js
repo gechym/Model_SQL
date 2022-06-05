@@ -24,14 +24,14 @@ const connectDatabase = async () => {
         User.belongsToMany(Product, { through: HoaDonBanHang });
         Product.belongsToMany(User, { through: HoaDonBanHang });
 
-        sequelize
-            .sync({ alert: true })
-            .then((result) => {
-                console.log('\n\n\n👉 Đồng bộ server thành công \n\n\n');
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        // sequelize
+        //     .sync({ force: true })
+        //     .then((result) => {
+        //         console.log('\n\n\n👉 Đồng bộ server thành công \n\n\n');
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     });
         await sequelize.authenticate();
 
         console.log('Connection has been established successfully.');

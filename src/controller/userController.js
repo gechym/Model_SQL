@@ -12,6 +12,7 @@ export const getUsers = catchAsync(async (req, res, next) => {
             exclude: [`password`, `passwordChangeAt`, `passwordResetToken`, `passwordResetExpires`],
         },
     });
+
     res.status(200).json({
         message: 'success',
         requestTime: req.requestTime,
@@ -22,57 +23,12 @@ export const getUsers = catchAsync(async (req, res, next) => {
     });
 });
 export const test = catchAsync(async (req, res, next) => {
-    // const country = await Country.findOne({ where: { countryName: 'Việt Nam' } });
-    // const capital = await Capital.findOne({ where: { cappitalName: 'Viên Chăm' } });
-
-    // // await country.setCapital(capital);
-    // await capital.setCountry(country);
-
-    const product = await Product.findAll();
-
-    const listUser = await User.findAll({
-        include: [Product, Post],
-    });
+    const country = await Country.findAll({ include: [Capital] });
+    const user = await User.findAll({ include: [Post] });
 
     res.status(200).json({
         message: 'Success',
-        product,
-        listUser,
+        country,
+        user,
     });
 });
-
-// Country.bulkCreate([
-//     {
-//         countryName: 'Việt Nam',
-//     },
-//     {
-//         countryName: 'Lào',
-//     },
-//     {
-//         countryName: 'Trung quốc',
-//     },
-//     {
-//         countryName: 'Đức',
-//     },
-//     {
-//         countryName: 'Nhật Bản',
-//     },
-// ]);
-
-// Capital.bulkCreate([
-//     {
-//         cappitalName: 'Hà Nội',
-//     },
-//     {
-//         cappitalName: 'Viên chăm',
-//     },
-//     {
-//         cappitalName: 'Bắc kinh',
-//     },
-//     {
-//         cappitalName: 'Berlin',
-//     },
-//     {
-//         cappitalName: 'Tokyo',
-//     },
-// ]);
