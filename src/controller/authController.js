@@ -41,6 +41,12 @@ export const signUp = catchAsync(async (req, res, next) => {
     });
 
     const token = createToken(user);
+
+    res.cookie('jwt', token, {
+        expires: new Date(Date.now() + process.env.COOKIE_HET_HAN * 24 * 60 * 60 * 1000),
+        secure: true,
+        httpOnly: true,
+    });
     res.status(200).json({
         message: 'success',
         token: token,
@@ -63,6 +69,13 @@ export const login = catchAsync(async (req, res, next) => {
     if (!checkPassword) return next(new AppError('mật khẩu không đúng'), 404);
 
     const token = createToken(user);
+
+    res.cookie('jwt', token, {
+        expires: new Date(Date.now() + process.env.COOKIE_HET_HAN * 24 * 60 * 60 * 1000),
+        secure: true,
+        httpOnly: true,
+    });
+
     res.status(200).json({
         message: 'success',
         token: token,
@@ -222,6 +235,13 @@ export const resetPassword = catchAsync(async (req, res, next) => {
     );
 
     const token = createToken(user);
+
+    res.cookie('jwt', token, {
+        expires: new Date(Date.now() + process.env.COOKIE_HET_HAN * 24 * 60 * 60 * 1000),
+        secure: true,
+        httpOnly: true,
+    });
+
     res.status(200).json({
         message: 'success',
         token: token,
@@ -265,6 +285,13 @@ export const changePassword = catchAsync(async (req, res, next) => {
     );
 
     const token = createToken(user);
+
+    res.cookie('jwt', token, {
+        expires: new Date(Date.now() + process.env.COOKIE_HET_HAN * 24 * 60 * 60 * 1000),
+        secure: true,
+        httpOnly: true,
+    });
+
     res.status(200).json({
         message: 'success',
         user: user,
