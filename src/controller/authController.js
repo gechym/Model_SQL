@@ -44,9 +44,6 @@ export const signUp = catchAsync(async (req, res, next) => {
     res.status(200).json({
         message: 'success',
         token: token,
-        data: {
-            user: user,
-        },
     });
 });
 
@@ -103,6 +100,17 @@ export const protect = catchAsync(async (req, res, next) => {
 
     // check user
     const currentUser = await User.findOne({
+        attributes: {
+            exclude: [
+                'password',
+                'passwordChangeAt',
+                'passwordResetToken',
+                'passwordResetExpires',
+                'createdAt',
+                'updatedAt',
+                'deletedAt',
+            ],
+        },
         where: {
             id: decode.id,
             name: decode.name,
@@ -220,5 +228,46 @@ export const resetPassword = catchAsync(async (req, res, next) => {
         data: {
             user: user,
         },
+    });
+});
+
+export const changePassword = catchAsync(async (req, res, next) => {
+    const { password, passwordConfig, currentPassword } = req.body;
+
+    if (!password || !passwordConfig || !currentPassword) {
+        return next(new AppError('Vui lòng cung cấp đầy đủ thông tin', 404));
+    }
+
+    const user = await User.findOne({ where: { email: req.user.email } });
+
+    if (!user) return next(new AppError('Người dùng ko tồn tại', 404));
+
+    const checkPassword = await bcryptjs.compare(currentPassword, user.password);
+
+    if (!checkPassword) {
+        return next(new AppError('Mật khẩu hiện tại ko đúng vui lòng kiểm tra lại', 404));
+    }
+
+    if (password !== passwordConfig) {
+        return next(new AppError('password config ko giống nhau', 404));
+    }
+
+    await User.update(
+        {
+            password: password,
+            passwordChangeAt: Date.now() + 10000,
+        },
+        {
+            where: {
+                email: user.email,
+            },
+        },
+    );
+
+    const token = createToken(user);
+    res.status(200).json({
+        message: 'success',
+        user: user,
+        token,
     });
 });
