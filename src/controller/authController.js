@@ -78,6 +78,11 @@ export const login = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         message: 'success',
+        user: {
+            name: user.name,
+            email: user.email,
+            rule: user.rule,
+        },
         token: token,
     });
 });
@@ -191,6 +196,11 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         message: 'success',
+        user: {
+            name: user.name,
+            email: user.email,
+            rule: user.rule,
+        },
         resetToken,
     });
 });
@@ -245,6 +255,11 @@ export const resetPassword = catchAsync(async (req, res, next) => {
     res.status(200).json({
         message: 'success',
         token: token,
+        user: {
+            name: user.name,
+            email: user.email,
+            rule: user.rule,
+        },
         data: {
             user: user,
         },
@@ -294,7 +309,11 @@ export const changePassword = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         message: 'success',
-        user: user,
+        user: {
+            name: user.name,
+            email: user.email,
+            rule: user.rule,
+        },
         token,
     });
 });

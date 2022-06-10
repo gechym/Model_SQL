@@ -13,6 +13,10 @@ import hpp from 'hpp';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
+// st up socket.io
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+
 const app = express();
 
 //config
@@ -41,7 +45,7 @@ app.use(
 // MIDDLEWARE
 app.use(mongoSanitize()); // chặn những mã try vấn đến db từ text của người dùng
 
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 
 app.use(xss()); // chặng người dùng chằn những mã html vs <script/> ...
 
@@ -80,16 +84,19 @@ app.use('/api/', limiter);
 app.use((req, res, next) => {
     console.log('hello middleware 😘');
     req.requestTime = new Date().toISOString();
-    console.log(req.headers);
+    // console.log(req.headers);
     next();
 });
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourRouter);
+
 app.use('*', (req, res, next) => {
     return next(new AppError('404', 404));
 });
 
 app.use(handleError());
 
-export default app;
+const httpServer = createServer(app);
+
+export default httpServer;
