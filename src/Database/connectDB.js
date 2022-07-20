@@ -11,7 +11,8 @@ const connectDatabase = async () => {
         //     .catch((err) => {
         //         console.log(err);
         //     });
-        // await sequelize.authenticate();
+
+        await sequelize.authenticate();
 
         console.log('Connection has been established successfully.');
     } catch (error) {

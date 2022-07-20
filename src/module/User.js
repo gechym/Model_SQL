@@ -44,7 +44,10 @@ const User = sequelize.define(
             type: Sequelize.DataTypes.STRING,
             allowNull: false,
             validate: {
-                len: [8, 100000000],
+                len: {
+                    args: [6, 100],
+                    msg: 'Mật khẩu phải có ít nhất 6 ký tự',
+                },
             },
             async set(value) {
                 // const rawValue = this.getDataValue('password')
